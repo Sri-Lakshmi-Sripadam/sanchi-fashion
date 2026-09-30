@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanchi - Fashion Festival</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
+  body{background:#fff8f0;padding-bottom:70px}
+  .header{display:flex;justify-content:space-between;align-items:center;padding:14px 5%;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:100}
+  .logo{font-weight:900;color:#8a5a44;font-size:22px;letter-spacing:2px}
+  .header input{width:40%;padding:10px 16px;border-radius:20px;border:1px solid #ddd;outline:none}
+  .header-right{display:flex;gap:20px;font-size:13px;font-weight:700;color:#5a3a28}
+  .header-right span{cursor:pointer;padding:6px 10px;border-radius:15px}
+  .header-right span:hover{background:#fdf2e9}
+  .marquee{background:#8a5a44;color:#fff;padding:7px 0;overflow:hidden;white-space:nowrap;font-size:12px}
+  .marquee span{display:inline-block;animation:scroll 20s linear infinite;padding-left:100%}
+  @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+  .menu{display:flex;gap:10px;padding:12px 5%;overflow-x:auto;background:#fff;border-bottom:1px solid #eee;position:sticky;top:54px;z-index:99}
+  .menu::-webkit-scrollbar{display:none}
+  .menu div{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;background:#fdf2e9;color:#6b5a51;cursor:pointer;white-space:nowrap}
+  .menu div.active{background:#8a5a44;color:#fff}
+  .banner{text-align:center;background:linear-gradient(90deg,#ffe4c4,#ffcc99);padding:35px 20px;margin:15px 5%;border-radius:14px}
+  .deals{display:flex;gap:12px;overflow-x:auto;margin:15px 5%}
+  .deals::-webkit-scrollbar{display:none}
+  .deal{min-width:130px;height:80px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#5a3a28;box-shadow:0 2px 8px rgba(0,0,0,0.05);cursor:pointer;flex-shrink:0;text-align:center;border:1px solid #f0e6de}
+  .deal.active{border:2px solid #8a5a44}
+  .products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 5%}
+  @media(min-width:700px){.products{grid-template-columns:repeat(4,1fr)}}
+  .card{background:#fff;border-radius:12px;overflow:hidden;border:1px solid #f0e6de}
+  .card-img{height:200px;background:#f9f1eb}
+  .card-img img{width:100%;height:100%;object-fit:cover}
+  .card-info{padding:10px}
+  .card-info h4{font-size:13px}
+  .card-info p{font-size:13px;color:#8a5a44;font-weight:700;margin-top:3px}
+  .card-info button{width:100%;margin-top:8px;padding:7px;border:none;background:#8a5a44;color:#fff;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+  .footer{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:#fff;border-top:1px solid #ddd;padding:14px 0}
+  .footer a{text-decoration:none;color:#5a3a28;font-weight:700;font-size:12px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">SANCHI.</div>
+  <input type="text" id="search" placeholder="Search...">
+  <div class="header-right">
+    <span id="wishBtn" onclick="showWishlist()">Wishlist (0)</span>
+    <span onclick="showProfile()">Profile</span>
+  </div>
+</div>
+
+<div class="marquee"><span>FLAT ₹500 OFF • FREE DELIVERY ABOVE ₹499 • MIN 80% OFF LIVE • SANCHI LUXE •</span></div>
+
+<div class="menu" id="mainMenu">
+  <div class="active" onclick="filterCat('All',this)">All</div>
+  <div onclick="filterCat('Women',this)">Women</div>
+  <div onclick="filterCat('Men',this)">Men</div>
+  <div onclick="filterCat('Kids',this)">Kids</div>
+  <div onclick="filterCat('Beauty',this)">Beauty</div>
+  <div onclick="filterCat('Footwear',this)">Footwear</div>
+</div>
+
+<div class="banner"><h1>Big Fashion Festival</h1></div>
+
+<div class="deals">
+  <div class="deal" onclick="filterDeal('80',this)">MIN.<br>80% OFF</div>
+  <div class="deal" onclick="filterDeal('999',this)">UNDER<br>₹999</div>
+  <div class="deal" onclick="filterDeal('699',this)">UNDER<br>₹699</div>
+  <div class="deal" onclick="filterDeal('new',this)">NEW<br>ARRIVALS</div>
+</div>
+
+<h3 style="padding:10px 5%;color:#5a3a28" id="title">All Products</h3>
+<div class="products" id="products"></div>
+
+<div class="footer">
+  <a onclick="window.scrollTo({top:0, behavior:'smooth'})">HOME</a>
+  <a onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">SHOP</a>
+  <a onclick="filterDeal('new', null)">LUXE</a>
+  <a id="bagBtn">BAG (0)</a>
+</div>
+
+<script>
+const allData = [
+ {name:'Embroidered Kurta', price:799, cat:'Women', img:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=400'},
+  {name:'Silk Saree', price:2499, cat:'Women', img:'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400'},
+  {name:'Linen Shirt', price:999, cat:'Men', img:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400'},
+  {name:'Polo T-Shirt', price:599, cat:'Men', img:'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400'},
+  {name:'Kids Frock', price:699, cat:'Kids', img:'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=400'},
+  {name:'Lipstick Set', price:399, cat:'Beauty', img:'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400'},
+  {name:'Running Shoes', price:1999, cat:'Footwear', img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400'},
+  {name:'women pants', price:699, cat:'Women', img:'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400'},
+ {name:'White Sneakers', price:1999, cat:'Footwear', img:'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400'},
+
+
+];
+let cartCount=0, wishCount=0;
+
+function render(list){
+  const box=document.getElementById('products');
+  box.innerHTML='';
+  list.forEach(p=>{
+    box.innerHTML+=`<div class="card"><div class="card-img"><img src="${p.img}" onerror="this.src='https://placehold.co/400x600/f5e6d3/8a5a44?text=${encodeURIComponent(p.name)}'"></div><div class="card-info"><h4>${p.name}</h4><p>₹${p.price}</p><button onclick="addToBag('${p.name}')">ADD TO BAG</button><button onclick="addToWish()" style="background:#fff;color:#8a5a44;border:1px solid #8a5a44;margin-top:5px">♡ WISHLIST</button></div></div>`;
+  });
+}
+function addToBag(name){cartCount++;document.getElementById('bagBtn').innerText=`BAG (${cartCount})`;alert(name+' added to bag!');}
+function addToWish(){wishCount++;document.getElementById('wishBtn').innerText=`Wishlist (${wishCount})`;alert('Added to wishlist!');}
+function showWishlist(){alert(`You have ${wishCount} items in Wishlist. This is where saved items will show - like Myntra wishlist feature.`);}
+function showProfile(){alert('Profile Section:\nName: Sri Lakshmi\nEmail: srilakshmi@sanchi.com\nOrders: 0\nThis is for user account - future login feature.');}
+function filterCat(cat, el){
+  document.querySelectorAll('.menu div').forEach(d=>d.classList.remove('active'));
+  document.querySelectorAll('.deals .deal').forEach(d=>d.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('title').innerText=cat+' Collections';
+  if(cat==='All') render(allData); else render(allData.filter(x=>x.cat===cat));
+}
+function filterDeal(type, el){
+  document.querySelectorAll('.deals .deal').forEach(d=>d.classList.remove('active'));
+  if(el) el.classList.add('active');
+  if(type==='80'){document.getElementById('title').innerText='Min 80% OFF';render(allData.filter(x=>x.price<=800));}
+  if(type==='999'){document.getElementById('title').innerText='Under ₹999';render(allData.filter(x=>x.price<1000));}
+  if(type==='699'){document.getElementById('title').innerText='Under ₹699';render(allData.filter(x=>x.price<700));}
+  if(type==='new'){document.getElementById('title').innerText='New Arrivals - Luxe';render(allData.filter(x=>x.price>1500));}
+}
+document.getElementById('search').addEventListener('input', e=>{render(allData.filter(x=>x.name.toLowerCase().includes(e.target.value.toLowerCase())));});
+render(allData);
+</script>
+</body>
+</html>
